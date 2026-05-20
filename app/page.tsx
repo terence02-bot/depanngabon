@@ -1,104 +1,90 @@
-import Link from "next/link";
+export default function Home() {
 
-export default function HomePage() {
   return (
-    <div style={{
-      minHeight: "100vh",
-      backgroundImage: "url('/bg.jpg.png')",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    }}>
+    <div>
 
-      {/* overlay */}
-      <div style={{
-        backgroundColor: "rgba(0,0,0,0.65)",
-        width: "100%",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 20,
-        color: "white",
-        textAlign: "center"
-      }}>
+      {/* MENU */}
 
-        {/* LOGO */}
-        <img
-          src="/bg.jpg.png"
-          style={{ width: 90, marginBottom: 10 }}
-        />
+      <nav style={nav}>
 
-        {/* TITRE (VERSION 1 inchangée) */}
-        <h1 style={{ margin: 0 }}>
-          Trouvez un artisan fiable. Sans stress. En quelques secondes.
-        </h1>
+        <h2 style={logo}>DepannGabon</h2>
 
-        {/* SOUS TITRE */}
-        <h3 style={{ marginTop: 30 }}>
-          🔧 Choisissez un métier
-        </h3>
+        <div style={links}>
 
-        {/* LISTE DES MÉTIERS (CORRIGÉE UNE SEULE FOIS) */}
-        <div style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          gap: 12,
-          maxWidth: 500,
-          marginTop: 10
-        }}>
+          <a href="/" style={link}>
+            Accueil
+          </a>
 
-          <Link href="/electricien">
-            <button style={btn}>⚡ Électricien</button>
-          </Link>
+          <a href="/inscription" style={link}>
+            Inscription
+          </a>
 
-          <Link href="/plombier">
-            <button style={btn}>🚰 Plombier</button>
-          </Link>
+          <a href="/connexion" style={link}>
+            Connexion
+          </a>
 
-          <Link href="/mecanicien">
-            <button style={btn}>🔧 Mécanicien</button>
-          </Link>
-
-          <Link href="/macon">
-            <button style={btn}>🧱 Maçon</button>
-          </Link>
-
-          <Link href="/charpentier">
-            <button style={btn}>🪚 Charpentier</button>
-          </Link>
+          <a href="/apropos" style={link}>
+            À propos
+          </a>
 
         </div>
 
-        {/* DESCRIPTION EN BAS (inchangée) */}
-        <p style={{
-          fontSize: 14,
-          maxWidth: 650,
-          marginTop: 40,
-          opacity: 0.9
-        }}>
-          DepannGabon est une plateforme qui vous permet de trouver rapidement
-          des artisans fiables au Gabon. Que ce soit pour vos travaux
-          d’électricité, plomberie, maçonnerie, mécanique ou charpente,
-          vous pouvez contacter un professionnel en un simple clic via WhatsApp.
+      </nav>
+
+      {/* CONTENU ACCUEIL */}
+
+      <div style={hero}>
+
+        <h1>
+          Bienvenue sur DepannGabon
+        </h1>
+
+        <p>
+          Trouvez rapidement des artisans qualifiés
+          partout au Gabon.
         </p>
 
       </div>
+
     </div>
   );
 }
 
-const btn = {
-  padding: "12px 18px",
-  borderRadius: 12,
-  border: "none",
-  background: "#0ea5e9",
+const nav = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  padding: "20px 40px",
+  background: "#111",
+  color: "white"
+};
+
+const logo = {
+  margin: 0
+};
+
+const links = {
+  display: "flex",
+  gap: "20px"
+};
+
+const link = {
   color: "white",
-  fontWeight: "bold",
-  cursor: "pointer",
-  whiteSpace: "nowrap"
+  textDecoration: "none",
+  fontWeight: "bold"
+};
+
+const hero = {
+  height: "80vh",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  textAlign: "center",
+  backgroundImage:
+    "url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1600')",
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  color: "white",
+  padding: 20
 };
