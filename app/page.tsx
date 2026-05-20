@@ -1,22 +1,24 @@
+import React from "react";
+
 export default function Home() {
   return (
-    <main style={main}>
+    <main style={main as React.CSSProperties}>
 
-      <nav style={nav}>
-        <h2 style={logo}>DepannGabon</h2>
+      <nav style={nav as React.CSSProperties}>
+        <h2 style={logo as React.CSSProperties}>DepannGabon</h2>
 
-        <div style={menu}>
-          <a href="/" style={link}>Accueil</a>
-          <a href="/apropos" style={link}>À propos</a>
+        <div style={menu as React.CSSProperties}>
+          <a href="/" style={link as React.CSSProperties}>Accueil</a>
+          <a href="/apropos" style={link as React.CSSProperties}>À propos</a>
         </div>
       </nav>
 
-      <section style={hero}>
-        <h1 style={title}>
+      <section style={hero as React.CSSProperties}>
+        <h1 style={title as React.CSSProperties}>
           Bienvenue sur DepannGabon
         </h1>
 
-        <p style={subtitle}>
+        <p style={subtitle as React.CSSProperties}>
           Trouvez rapidement des artisans qualifiés au Gabon.
         </p>
       </section>
