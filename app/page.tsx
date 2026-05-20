@@ -3,24 +3,30 @@ export default function Home() {
   return (
     <div>
 
-      {/* MENU */}
+      {/* NAVIGATION */}
 
       <nav style={nav}>
 
-        <h2 style={logo}>DepannGabon</h2>
+        <h2 style={logo}>
+          DepannGabon
+        </h2>
 
-        <div style={links}>
+        <div style={menu}>
 
           <a href="/" style={link}>
             Accueil
           </a>
 
-          <a href="/inscription" style={link}>
-            Inscription
+          <a href="/electricien" style={link}>
+            Électriciens
           </a>
 
-          <a href="/connexion" style={link}>
-            Connexion
+          <a href="/plombier" style={link}>
+            Plombiers
+          </a>
+
+          <a href="/mecanicien" style={link}>
+            Mécaniciens
           </a>
 
           <a href="/apropos" style={link}>
@@ -31,39 +37,39 @@ export default function Home() {
 
       </nav>
 
-      {/* CONTENU ACCUEIL */}
+      {/* SECTION ACCUEIL */}
 
-      <div style={hero}>
+      <section style={hero}>
 
-        <h1>
+        <h1 style={title}>
           Bienvenue sur DepannGabon
         </h1>
 
-        <p>
+        <p style={subtitle}>
           Trouvez rapidement des artisans qualifiés
           partout au Gabon.
         </p>
 
-      </div>
+      </section>
 
     </div>
   );
 }
 
 const nav = {
+  background: "#111",
+  padding: "20px 40px",
   display: "flex",
   justifyContent: "space-between",
-  alignItems: "center",
-  padding: "20px 40px",
-  background: "#111",
-  color: "white"
+  alignItems: "center"
 };
 
 const logo = {
+  color: "white",
   margin: 0
 };
 
-const links = {
+const menu = {
   display: "flex",
   gap: "20px"
 };
@@ -75,7 +81,7 @@ const link = {
 };
 
 const hero = {
-  height: "80vh",
+  height: "90vh",
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
@@ -87,4 +93,14 @@ const hero = {
   backgroundPosition: "center",
   color: "white",
   padding: 20
+};
+
+const title = {
+  fontSize: "60px",
+  marginBottom: 20
+};
+
+const subtitle = {
+  fontSize: "24px",
+  maxWidth: 700
 };
