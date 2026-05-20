@@ -1,115 +1,57 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "../supabase";
+import { supabase } from "@/lib/supabase";
 
-export default function AvisPage() {
+export default function Avis() {
 
-  const [artisanId, setArtisanId] = useState("");
-  const [nomClient, setNomClient] = useState("");
-  const [note, setNote] = useState(5);
-  const [commentaire, setCommentaire] = useState("");
+  const [form, setForm] = useState({
+    artisan_id: "",
+    nom_client: "",
+    note: 5,
+    commentaire: ""
+  });
 
-  const envoyerAvis = async () => {
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const submit = async (e) => {
+    e.preventDefault();
 
     const { error } = await supabase
       .from("avis")
-      .insert([
-        {
-          artisan_id: artisanId,
-          nom_client: nomClient,
-          note: Number(note),
-          commentaire
-        }
-      ]);
+      .insert([form]);
 
     if (!error) {
-      alert("Avis envoyé ⭐");
-      setNomClient("");
-      setCommentaire("");
-      setNote(5);
-    } else {
-      alert("Erreur");
-      console.log(error);
+      alert("Avis ajouté !");
     }
   };
 
   return (
-    <div style={{ padding: 20, maxWidth: 500, margin: "auto" }}>
+    <div style={{ padding: 20 }}>
 
-      <h1>Laisser un avis ⭐</h1>
+      <h1>Laisser un avis</h1>
 
-      <input
-        placeholder="ID artisan"
-        value={artisanId}
-        onChange={(e) => setArtisanId(e.target.value)}
-        style={input}
-      />
+      <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
 
-      <br /><br />
+        <input name="artisan_id" placeholder="ID artisan" onChange={handleChange} />
+        <input name="nom_client" placeholder="Votre nom" onChange={handleChange} />
 
-      <input
-        placeholder="Ton nom"
-        value={nomClient}
-        onChange={(e) => setNomClient(e.target.value)}
-        style={input}
-      />
+        <select name="note" onChange={handleChange}>
+          <option value="5">⭐⭐⭐⭐⭐</option>
+          <option value="4">⭐⭐⭐⭐</option>
+          <option value="3">⭐⭐⭐</option>
+          <option value="2">⭐⭐</option>
+          <option value="1">⭐</option>
+        </select>
 
-      <br /><br />
+        <textarea name="commentaire" placeholder="Commentaire" onChange={handleChange} />
 
-      <select
-        value={note}
-        onChange={(e) => setNote(e.target.value)}
-        style={input}
-      >
-        <option value="5">⭐⭐⭐⭐⭐</option>
-        <option value="4">⭐⭐⭐⭐</option>
-        <option value="3">⭐⭐⭐</option>
-        <option value="2">⭐⭐</option>
-        <option value="1">⭐</option>
-      </select>
+        <button>Envoyer</button>
 
-      <br /><br />
-
-      <textarea
-        placeholder="Commentaire"
-        value={commentaire}
-        onChange={(e) => setCommentaire(e.target.value)}
-        style={textarea}
-      />
-
-      <br /><br />
-
-      <button onClick={envoyerAvis} style={button}>
-        Envoyer
-      </button>
+      </form>
 
     </div>
   );
 }
-
-const input = {
-  width: "100%",
-  padding: 12,
-  borderRadius: 10,
-  border: "1px solid #ccc"
-};
-
-const textarea = {
-  width: "100%",
-  height: 120,
-  padding: 12,
-  borderRadius: 10,
-  border: "1px solid #ccc"
-};
-
-const button = {
-  width: "100%",
-  padding: 12,
-  border: "none",
-  borderRadius: 10,
-  background: "#f59e0b",
-  color: "white",
-  fontWeight: "bold",
-  cursor: "pointer"
-};
