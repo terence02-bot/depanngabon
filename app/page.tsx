@@ -1,45 +1,17 @@
 export default function Home() {
   return (
-    <div>
+    <main style={main}>
 
       <nav style={nav}>
         <h2 style={logo}>DepannGabon</h2>
 
         <div style={menu}>
-
-          <a href="/" style={link}>
-            Accueil
-          </a>
-
-          <a href="/electricien" style={link}>
-            Électriciens
-          </a>
-
-          <a href="/plombier" style={link}>
-            Plombiers
-          </a>
-
-          <a href="/mecanicien" style={link}>
-            Mécaniciens
-          </a>
-
-          <a href="/macon" style={link}>
-            Maçons
-          </a>
-
-          <a href="/charpentier" style={link}>
-            Charpentiers
-          </a>
-
-          <a href="/apropos" style={link}>
-            À propos
-          </a>
-
+          <a href="/" style={link}>Accueil</a>
+          <a href="/apropos" style={link}>À propos</a>
         </div>
       </nav>
 
       <section style={hero}>
-
         <h1 style={title}>
           Bienvenue sur DepannGabon
         </h1>
@@ -47,15 +19,20 @@ export default function Home() {
         <p style={subtitle}>
           Trouvez rapidement des artisans qualifiés au Gabon.
         </p>
-
       </section>
 
-    </div>
+    </main>
   );
 }
 
+const main = {
+  margin: 0,
+  padding: 0
+};
+
 const nav = {
   background: "#111",
+  color: "white",
   padding: "20px",
   display: "flex",
   justifyContent: "space-between",
@@ -63,13 +40,12 @@ const nav = {
 };
 
 const logo = {
-  color: "white"
+  margin: 0
 };
 
 const menu = {
   display: "flex",
-  gap: "15px",
-  flexWrap: "wrap"
+  gap: "20px"
 };
 
 const link = {
@@ -85,11 +61,13 @@ const hero = {
   justifyContent: "center",
   alignItems: "center",
   background: "#f5f5f5",
-  textAlign: "center"
+  textAlign: "center",
+  padding: "20px"
 };
 
 const title = {
-  fontSize: "50px"
+  fontSize: "50px",
+  marginBottom: "20px"
 };
 
 const subtitle = {
