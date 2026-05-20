@@ -1,76 +1,88 @@
-export default function Home() {
+import Link from "next/link";
+
+export default function HomePage() {
   return (
-    <div>
+    <div style={{
+      minHeight: "100vh",
+      backgroundImage: "url('/bg.jpg.png')",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }}>
 
-      <nav style={nav}>
-        <h2 style={logo}>DepannGabon</h2>
+      {/* overlay */}
+      <div style={{
+        backgroundColor: "rgba(0,0,0,0.65)",
+        width: "100%",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 20,
+        color: "white"
+      }}>
 
-        <div style={menu}>
-          <a href="/" style={link}>Accueil</a>
-          <a href="/electricien" style={link}>Électriciens</a>
-          <a href="/plombier" style={link}>Plombiers</a>
-          <a href="/mecanicien" style={link}>Mécaniciens</a>
-          <a href="/macon" style={link}>Maçons</a>
-          <a href="/charpentier" style={link}>Charpentiers</a>
-        </div>
-      </nav>
+        {/* LOGO */}
+        <img
+          src="/bg.jpg.png"
+          style={{ width: 90, marginBottom: 10 }}
+        />
 
-      <section style={hero}>
-        <h1 style={title}>
-          Bienvenue sur DepannGabon
-        </h1>
+        <h1>Depann'Gabon</h1>
 
-        <p style={subtitle}>
-          Trouvez rapidement des artisans qualifiés partout au Gabon.
+        <p style={{ maxWidth: 500, textAlign: "center" }}>
+          Trouvez rapidement des artisans fiables au Gabon
         </p>
-      </section>
 
+        <h3 style={{ marginTop: 30 }}>🔧 Choisir un métier</h3>
+
+        {/* BOUTONS EN LIGNE */}
+        <div style={{
+          display: "flex",
+          gap: 12,
+          flexWrap: "nowrap",
+          overflowX: "auto",
+          padding: 10,
+          maxWidth: "100%"
+        }}>
+
+          <Link href="/electricien">
+            <button style={btn}>⚡ Électricien</button>
+          </Link>
+
+          <Link href="/plombier">
+            <button style={btn}>🚰 Plombier</button>
+          </Link>
+
+          <Link href="/mecanicien">
+            <button style={btn}>🔧 Mécanicien</button>
+          </Link>
+
+          <Link href="/macon">
+            <button style={btn}>🧱 Maçon</button>
+          </Link>
+
+          <Link href="/charpentier">
+            <button style={btn}>🪚 Charpentier</button>
+          </Link>
+
+        </div>
+
+      </div>
     </div>
   );
 }
 
-const nav = {
-  background: "#111",
-  padding: "20px",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  flexWrap: "wrap"
-};
-
-const logo = {
+const btn = {
+  padding: "12px 18px",
+  borderRadius: 12,
+  border: "none",
+  background: "#0ea5e9",
   color: "white",
-  margin: 0
-};
-
-const menu = {
-  display: "flex",
-  gap: "15px",
-  flexWrap: "wrap"
-};
-
-const link = {
-  color: "white",
-  textDecoration: "none",
-  fontWeight: "bold"
-};
-
-const hero = {
-  height: "80vh",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-  background: "#f5f5f5",
-  textAlign: "center",
-  padding: "20px"
-};
-
-const title = {
-  fontSize: "50px",
-  marginBottom: "20px"
-};
-
-const subtitle = {
-  fontSize: "22px"
+  fontWeight: "bold",
+  cursor: "pointer",
+  whiteSpace: "nowrap"
 };
