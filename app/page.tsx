@@ -1,53 +1,52 @@
-import React from "react";
-
 export default function Home() {
   return (
-    <main style={main as React.CSSProperties}>
+    <div>
 
-      <nav style={nav as React.CSSProperties}>
-        <h2 style={logo as React.CSSProperties}>DepannGabon</h2>
+      <nav style={nav}>
+        <h2 style={logo}>DepannGabon</h2>
 
-        <div style={menu as React.CSSProperties}>
-          <a href="/" style={link as React.CSSProperties}>Accueil</a>
-          <a href="/apropos" style={link as React.CSSProperties}>À propos</a>
+        <div style={menu}>
+          <a href="/" style={link}>Accueil</a>
+          <a href="/electricien" style={link}>Électriciens</a>
+          <a href="/plombier" style={link}>Plombiers</a>
+          <a href="/mecanicien" style={link}>Mécaniciens</a>
+          <a href="/macon" style={link}>Maçons</a>
+          <a href="/charpentier" style={link}>Charpentiers</a>
         </div>
       </nav>
 
-      <section style={hero as React.CSSProperties}>
-        <h1 style={title as React.CSSProperties}>
+      <section style={hero}>
+        <h1 style={title}>
           Bienvenue sur DepannGabon
         </h1>
 
-        <p style={subtitle as React.CSSProperties}>
-          Trouvez rapidement des artisans qualifiés au Gabon.
+        <p style={subtitle}>
+          Trouvez rapidement des artisans qualifiés partout au Gabon.
         </p>
       </section>
 
-    </main>
+    </div>
   );
 }
 
-const main = {
-  margin: 0,
-  padding: 0
-};
-
 const nav = {
   background: "#111",
-  color: "white",
   padding: "20px",
   display: "flex",
   justifyContent: "space-between",
-  alignItems: "center"
+  alignItems: "center",
+  flexWrap: "wrap"
 };
 
 const logo = {
+  color: "white",
   margin: 0
 };
 
 const menu = {
   display: "flex",
-  gap: "20px"
+  gap: "15px",
+  flexWrap: "wrap"
 };
 
 const link = {
