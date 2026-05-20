@@ -1,15 +1,9 @@
 export default function Home() {
-
   return (
     <div>
 
-      {/* NAVBAR */}
-
       <nav style={nav}>
-
-        <h2 style={logo}>
-          DepannGabon
-        </h2>
+        <h2 style={logo}>DepannGabon</h2>
 
         <div style={menu}>
 
@@ -42,10 +36,7 @@ export default function Home() {
           </a>
 
         </div>
-
       </nav>
-
-      {/* HERO */}
 
       <section style={hero}>
 
@@ -54,37 +45,10 @@ export default function Home() {
         </h1>
 
         <p style={subtitle}>
-          Trouvez rapidement des artisans qualifiés
-          partout au Gabon.
+          Trouvez rapidement des artisans qualifiés au Gabon.
         </p>
 
       </section>
-
-      {/* METIERS */}
-
-      <div style={grid}>
-
-        <a href="/electricien" style={card}>
-          ⚡ Électriciens
-        </a>
-
-        <a href="/plombier" style={card}>
-          🚰 Plombiers
-        </a>
-
-        <a href="/mecanicien" style={card}>
-          🔧 Mécaniciens
-        </a>
-
-        <a href="/macon" style={card}>
-          🧱 Maçons
-        </a>
-
-        <a href="/charpentier" style={card}>
-          🪚 Charpentiers
-        </a>
-
-      </div>
 
     </div>
   );
@@ -92,20 +56,19 @@ export default function Home() {
 
 const nav = {
   background: "#111",
-  padding: "20px 40px",
+  padding: "20px",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center"
 };
 
 const logo = {
-  color: "white",
-  margin: 0
+  color: "white"
 };
 
 const menu = {
   display: "flex",
-  gap: "20px",
+  gap: "15px",
   flexWrap: "wrap"
 };
 
@@ -116,40 +79,19 @@ const link = {
 };
 
 const hero = {
-  height: "70vh",
+  height: "80vh",
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
-  textAlign: "center",
-  background: "#f4f4f4",
-  padding: 20
+  background: "#f5f5f5",
+  textAlign: "center"
 };
 
 const title = {
-  fontSize: "55px",
-  marginBottom: 20
+  fontSize: "50px"
 };
 
 const subtitle = {
-  fontSize: "22px",
-  maxWidth: 700
-};
-
-const grid = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-  gap: 20,
-  padding: 40
-};
-
-const card = {
-  background: "#111",
-  color: "white",
-  padding: 30,
-  borderRadius: 10,
-  textAlign: "center",
-  textDecoration: "none",
-  fontWeight: "bold",
-  fontSize: 20
+  fontSize: "22px"
 };
