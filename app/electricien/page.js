@@ -21,49 +21,87 @@ export default function ElectricienPage() {
     if (error) {
       console.log("ERROR FETCH:", error);
     } else {
-      console.log("DATA:", data); // 👈 IMPORTANT DEBUG
       setArtisans(data || []);
     }
   };
 
   return (
-    <div style={{ padding: 20 }}>
+    <div style={pageStyle}>
 
-      <h1>⚡ Électriciens</h1>
+      {/* OVERLAY */}
+      <div style={overlayStyle}></div>
 
-      {artisans.length === 0 && <p>Aucun artisan</p>}
+      {/* CONTENT */}
+      <div style={contentStyle}>
 
-      {artisans.map((artisan) => (
+        <h1 style={{ color: "white" }}>⚡ Électriciens</h1>
 
-        <div key={artisan.id} style={card}>
+        {artisans.length === 0 && (
+          <p style={{ color: "white" }}>Aucun artisan</p>
+        )}
 
-          {/* IMAGE SAFE DISPLAY */}
-          {artisan.image ? (
-            <img
-              src={artisan.image}
-              alt={artisan.nom}
-              style={img}
-              onError={(e) => e.target.style.display = "none"}
-            />
-          ) : (
-            <p style={{ fontStyle: "italic" }}>Pas de photo</p>
-          )}
+        {artisans.map((artisan) => (
 
-          <h2>{artisan.nom}</h2>
-          <p>📞 {artisan.telephone}</p>
-          <p>📍 {artisan.quartier}</p>
-          <p>{artisan.description}</p>
+          <div key={artisan.id} style={card}>
 
-        </div>
+            {artisan.image ? (
+              <img
+                src={artisan.image}
+                alt={artisan.nom}
+                style={img}
+              />
+            ) : (
+              <p style={{ fontStyle: "italic" }}>Pas de photo</p>
+            )}
 
-      ))}
+            <h2>{artisan.nom}</h2>
+            <p>📞 {artisan.telephone}</p>
+            <p>📍 {artisan.quartier}</p>
+            <p>{artisan.description}</p>
 
+          </div>
+
+        ))}
+
+      </div>
     </div>
   );
 }
 
+/* ===================== */
+/* STYLE BACKGROUND      */
+/* ===================== */
+
+const pageStyle = {
+  minHeight: "100vh",
+  backgroundImage: "url('/electricien.jpg')",
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  position: "relative"
+};
+
+const overlayStyle = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  backgroundColor: "rgba(0,0,0,0.5)",
+  zIndex: 1
+};
+
+const contentStyle = {
+  position: "relative",
+  zIndex: 2,
+  padding: 20
+};
+
+/* ===================== */
+/* CARTE ARTISAN        */
+/* ===================== */
+
 const card = {
-  border: "1px solid #ddd",
+  backgroundColor: "rgba(255,255,255,0.95)",
   padding: 15,
   marginBottom: 15,
   borderRadius: 10

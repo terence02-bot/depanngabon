@@ -2,28 +2,10 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <div style={{
-      minHeight: "100vh",
-      backgroundImage: "url('/bg.jpg.png')",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    }}>
+    <div style={pageStyle}>
 
-      {/* overlay */}
-      <div style={{
-        backgroundColor: "rgba(0,0,0,0.65)",
-        width: "100%",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 20,
-        color: "white"
-      }}>
+      {/* OVERLAY */}
+      <div style={overlayStyle}>
 
         {/* LOGO */}
         <img
@@ -31,23 +13,20 @@ export default function HomePage() {
           style={{ width: 90, marginBottom: 10 }}
         />
 
-        <h1>Depann'Gabon</h1>
+        <h1 style={{ fontSize: 42, marginBottom: 10 }}>
+          Depann'Gabon
+        </h1>
 
-        <p style={{ maxWidth: 500, textAlign: "center" }}>
+        <p style={descriptionStyle}>
           Trouvez rapidement des artisans fiables au Gabon
         </p>
 
-        <h3 style={{ marginTop: 30 }}>🔧 Choisir un métier</h3>
+        <h3 style={{ marginTop: 30 }}>
+          🔧 Choisir un métier
+        </h3>
 
-        {/* BOUTONS EN LIGNE */}
-        <div style={{
-          display: "flex",
-          gap: 12,
-          flexWrap: "nowrap",
-          overflowX: "auto",
-          padding: 10,
-          maxWidth: "100%"
-        }}>
+        {/* BOUTONS METIERS */}
+        <div style={metierContainer}>
 
           <Link href="/electricien">
             <button style={btn}>⚡ Électricien</button>
@@ -71,10 +50,89 @@ export default function HomePage() {
 
         </div>
 
+        {/* ======================= */}
+        {/* BIOGRAPHIE */}
+        {/* ======================= */}
+
+        <div style={bioCard}>
+
+          <h2 style={{ marginBottom: 15 }}>
+            👤 À propos du créateur
+          </h2>
+
+          <p>
+            <strong>Nom :</strong> EBE OBAME Paul Terence
+          </p>
+
+          <p>
+            <strong>Ville :</strong> Libreville, Gabon
+          </p>
+
+          <p>
+            <strong>Date de naissance :</strong> 03/05/2002
+          </p>
+
+          <p>
+            <strong>Email :</strong> ebepaul75@gmail.com
+          </p>
+
+          <p>
+            <strong>Rôle :</strong> Créateur de Depann'Gabon
+          </p>
+
+          <p>
+            <strong>Description :</strong> Passionné de technologie
+            et de services numériques, avec l’ambition de moderniser
+            la mise en relation entre artisans et clients au Gabon
+            grâce à une plateforme simple, rapide et accessible.
+          </p>
+
+        </div>
+
       </div>
     </div>
   );
 }
+
+/* ======================= */
+/* PAGE */
+/* ======================= */
+
+const pageStyle = {
+  minHeight: "100vh",
+  backgroundImage: "url('/bg.jpg.png')",
+  backgroundSize: "cover",
+  backgroundPosition: "center"
+};
+
+const overlayStyle = {
+  backgroundColor: "rgba(0,0,0,0.65)",
+  width: "100%",
+  minHeight: "100vh",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  padding: 20,
+  color: "white"
+};
+
+const descriptionStyle = {
+  maxWidth: 500,
+  textAlign: "center"
+};
+
+/* ======================= */
+/* METIERS */
+/* ======================= */
+
+const metierContainer = {
+  display: "flex",
+  gap: 12,
+  flexWrap: "nowrap",
+  overflowX: "auto",
+  padding: 10,
+  maxWidth: "100%"
+};
 
 const btn = {
   padding: "12px 18px",
@@ -85,4 +143,19 @@ const btn = {
   fontWeight: "bold",
   cursor: "pointer",
   whiteSpace: "nowrap"
+};
+
+/* ======================= */
+/* BIOGRAPHIE */
+/* ======================= */
+
+const bioCard = {
+  marginTop: 50,
+  backgroundColor: "rgba(255,255,255,0.12)",
+  backdropFilter: "blur(6px)",
+  padding: 25,
+  borderRadius: 20,
+  maxWidth: 700,
+  lineHeight: 1.8,
+  border: "1px solid rgba(255,255,255,0.2)"
 };

@@ -26,34 +26,76 @@ export default function MaconPage() {
   };
 
   return (
-    <div style={{ padding: 20 }}>
+    <div style={pageStyle}>
 
-      <h1>🧱 Maçons</h1>
+      {/* overlay */}
+      <div style={overlayStyle}></div>
 
-      {artisans.length === 0 && <p>Aucun artisan</p>}
+      {/* content */}
+      <div style={contentStyle}>
 
-      {artisans.map((artisan) => (
-        <div key={artisan.id} style={card}>
+        <h1 style={{ color: "white" }}>🧱 Maçons</h1>
 
-          {artisan.image ? (
-            <img src={artisan.image} alt={artisan.nom} style={img} />
-          ) : (
-            <p>Pas de photo</p>
-          )}
+        {artisans.length === 0 && (
+          <p style={{ color: "white" }}>Aucun artisan</p>
+        )}
 
-          <h2>{artisan.nom}</h2>
-          <p>📞 {artisan.telephone}</p>
-          <p>📍 {artisan.quartier}</p>
-          <p>{artisan.description}</p>
+        {artisans.map((artisan) => (
+          <div key={artisan.id} style={card}>
 
-        </div>
-      ))}
+            {artisan.image ? (
+              <img src={artisan.image} alt={artisan.nom} style={img} />
+            ) : (
+              <p>Pas de photo</p>
+            )}
 
+            <h2>{artisan.nom}</h2>
+            <p>📞 {artisan.telephone}</p>
+            <p>📍 {artisan.quartier}</p>
+            <p>{artisan.description}</p>
+
+          </div>
+        ))}
+
+      </div>
     </div>
   );
 }
 
+/* ===================== */
+/* BACKGROUND           */
+/* ===================== */
+
+const pageStyle = {
+  minHeight: "100vh",
+  backgroundImage: "url('/macon.jpeg')",
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  position: "relative"
+};
+
+const overlayStyle = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  backgroundColor: "rgba(0,0,0,0.5)",
+  zIndex: 1
+};
+
+const contentStyle = {
+  position: "relative",
+  zIndex: 2,
+  padding: 20
+};
+
+/* ===================== */
+/* CARDS                */
+/* ===================== */
+
 const card = {
+  backgroundColor: "rgba(255,255,255,0.95)",
   border: "1px solid #ddd",
   padding: 15,
   marginBottom: 15,
