@@ -10,10 +10,10 @@ export default function HomePage() {
         {/* LOGO */}
         <img
           src="/bg.jpg.png"
-          style={{ width: 90, marginBottom: 10 }}
+          style={{ width: "90px", marginBottom: "10px" }}
         />
 
-        <h1 style={{ fontSize: 42, marginBottom: 10 }}>
+        <h1 style={{ fontSize: "42px", marginBottom: "10px" }}>
           Depann'Gabon
         </h1>
 
@@ -21,7 +21,7 @@ export default function HomePage() {
           Trouvez rapidement des artisans fiables au Gabon
         </p>
 
-        <h3 style={{ marginTop: 30 }}>
+        <h3 style={{ marginTop: "30px" }}>
           🔧 Choisir un métier
         </h3>
 
@@ -50,13 +50,11 @@ export default function HomePage() {
 
         </div>
 
-        {/* ======================= */}
         {/* BIOGRAPHIE */}
-        {/* ======================= */}
 
         <div style={bioCard}>
 
-          <h2 style={{ marginBottom: 15 }}>
+          <h2 style={{ marginBottom: "15px" }}>
             👤 À propos du créateur
           </h2>
 
@@ -94,9 +92,7 @@ export default function HomePage() {
   );
 }
 
-/* ======================= */
 /* PAGE */
-/* ======================= */
 
 const pageStyle = {
   minHeight: "100vh",
@@ -112,31 +108,29 @@ const overlayStyle = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  padding: 20,
+  padding: "20px",
   color: "white"
 };
 
 const descriptionStyle = {
-  maxWidth: 500,
+  maxWidth: "500px",
   textAlign: "center"
 };
 
-/* ======================= */
 /* METIERS */
-/* ======================= */
 
 const metierContainer = {
   display: "flex",
-  gap: 12,
+  gap: "12px",
   flexWrap: "nowrap",
   overflowX: "auto",
-  padding: 10,
+  padding: "10px",
   maxWidth: "100%"
 };
 
 const btn = {
   padding: "12px 18px",
-  borderRadius: 12,
+  borderRadius: "12px",
   border: "none",
   background: "#0ea5e9",
   color: "white",
@@ -145,17 +139,15 @@ const btn = {
   whiteSpace: "nowrap"
 };
 
-/* ======================= */
 /* BIOGRAPHIE */
-/* ======================= */
 
 const bioCard = {
-  marginTop: 50,
+  marginTop: "50px",
   backgroundColor: "rgba(255,255,255,0.12)",
   backdropFilter: "blur(6px)",
-  padding: 25,
-  borderRadius: 20,
-  maxWidth: 700,
-  lineHeight: 1.8,
+  padding: "25px",
+  borderRadius: "20px",
+  maxWidth: "700px",
+  lineHeight: "1.8",
   border: "1px solid rgba(255,255,255,0.2)"
 };
