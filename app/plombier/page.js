@@ -1,81 +1,70 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "../supabase";
+import { supabase } from "@/lib/supabase";
 
-export default function Plombiers() {
+export default function PlombierPage() {
 
-  const [list, setList] = useState([]);
-  const [avis, setAvis] = useState({});
+  const [artisans, setArtisans] = useState([]);
 
   useEffect(() => {
-    load();
+    fetchArtisans();
   }, []);
 
-  const load = async () => {
+  const fetchArtisans = async () => {
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("artisans")
       .select("*")
       .eq("metier", "plombier");
 
-    setList(data || []);
-    loadAvis(data || []);
-  };
-
-  const loadAvis = async (artisans) => {
-
-    let obj = {};
-
-    for (let a of artisans) {
-      const { data } = await supabase
-        .from("avis")
-        .select("*")
-        .eq("artisan_id", a.id);
-
-      obj[a.id] = data || [];
+    if (error) {
+      console.log(error);
+    } else {
+      setArtisans(data || []);
     }
-
-    setAvis(obj);
-  };
-
-  const moyenne = (list) => {
-    if (!list || list.length === 0) return 0;
-    return (list.reduce((a,b)=>a+b.note,0)/list.length).toFixed(1);
   };
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>Plombiers 🚰</h1>
 
-      {list.map((a) => (
-        <div key={a.id} style={card}>
+      <h1>🚰 Plombiers</h1>
 
-          {a.image && <img src={a.image} style={img} />}
+      {artisans.length === 0 && <p>Aucun artisan</p>}
 
-          <h3>{a.nom}</h3>
-          <p>{a.telephone}</p>
-          <p>{a.quartier}</p>
-          <p>{a.description}</p>
+      {artisans.map((artisan) => (
+        <div key={artisan.id} style={card}>
 
-          <p>⭐ {moyenne(avis[a.id])}</p>
+          {artisan.image ? (
+            <img src={artisan.image} alt={artisan.nom} style={img} />
+          ) : (
+            <p>Pas de photo</p>
+          )}
 
-          <a href={`/avis?artisan=${a.id}`}>Laisser un avis</a>
-
-          {(avis[a.id] || []).map((av) => (
-            <div key={av.id} style={box}>
-              <b>{av.nom_client}</b>
-              <p>{"⭐".repeat(av.note)}</p>
-              <p>{av.commentaire}</p>
-            </div>
-          ))}
+          <h2>{artisan.nom}</h2>
+          <p>📞 {artisan.telephone}</p>
+          <p>📍 {artisan.quartier}</p>
+          <p>{artisan.description}</p>
 
         </div>
       ))}
+
     </div>
   );
 }
 
-const card = { border: "1px solid #ddd", padding: 15, marginBottom: 15, borderRadius: 10 };
-const img = { width: 80, height: 80, borderRadius: "50%" };
-const box = { background: "#f9f9f9", padding: 8, marginTop: 5, borderRadius: 8 };
+const card = {
+  border: "1px solid #ddd",
+  padding: 15,
+  marginBottom: 15,
+  borderRadius: 10
+};
+
+const img = {
+  width: 100,
+  height: 100,
+  borderRadius: "50%",
+  objectFit: "cover",
+  marginBottom: 10,
+  display: "block"
+};

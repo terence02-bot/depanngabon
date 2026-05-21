@@ -3,22 +3,27 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
-export default function Electriciens() {
+export default function ElectricienPage() {
 
-  const [list, setList] = useState([]);
+  const [artisans, setArtisans] = useState([]);
 
   useEffect(() => {
-    fetchData();
+    fetchArtisans();
   }, []);
 
-  const fetchData = async () => {
+  const fetchArtisans = async () => {
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("artisans")
       .select("*")
       .eq("metier", "electricien");
 
-    setList(data || []);
+    if (error) {
+      console.log("ERROR FETCH:", error);
+    } else {
+      console.log("DATA:", data); // 👈 IMPORTANT DEBUG
+      setArtisans(data || []);
+    }
   };
 
   return (
@@ -26,15 +31,31 @@ export default function Electriciens() {
 
       <h1>⚡ Électriciens</h1>
 
-      {list.map((a) => (
-        <div key={a.id} style={card}>
+      {artisans.length === 0 && <p>Aucun artisan</p>}
 
-          <h3>{a.nom}</h3>
-          <p>📞 {a.telephone}</p>
-          <p>📍 {a.quartier}</p>
-          <p>{a.description}</p>
+      {artisans.map((artisan) => (
+
+        <div key={artisan.id} style={card}>
+
+          {/* IMAGE SAFE DISPLAY */}
+          {artisan.image ? (
+            <img
+              src={artisan.image}
+              alt={artisan.nom}
+              style={img}
+              onError={(e) => e.target.style.display = "none"}
+            />
+          ) : (
+            <p style={{ fontStyle: "italic" }}>Pas de photo</p>
+          )}
+
+          <h2>{artisan.nom}</h2>
+          <p>📞 {artisan.telephone}</p>
+          <p>📍 {artisan.quartier}</p>
+          <p>{artisan.description}</p>
 
         </div>
+
       ))}
 
     </div>
@@ -44,6 +65,15 @@ export default function Electriciens() {
 const card = {
   border: "1px solid #ddd",
   padding: 15,
-  marginBottom: 10,
+  marginBottom: 15,
   borderRadius: 10
+};
+
+const img = {
+  width: 100,
+  height: 100,
+  borderRadius: "50%",
+  objectFit: "cover",
+  marginBottom: 10,
+  display: "block"
 };

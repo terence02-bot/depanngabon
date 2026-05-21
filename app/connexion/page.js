@@ -1,46 +1,86 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 export default function Connexion() {
 
-  const [form, setForm] = useState({
-    email: "",
-    password: ""
-  });
+  const router = useRouter();
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const [email, setEmail] = useState("");
+  const [motDePasse, setMotDePasse] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const login = async (e) => {
+  const connecter = async (e) => {
     e.preventDefault();
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email: form.email,
-      password: form.password
-    });
+    setLoading(true);
 
-    if (error) {
+    try {
+
+      const { data, error } = await supabase
+        .from("artisans")
+        .select("*")
+        .eq("email", email)
+        .eq("mot_de_passe", motDePasse)
+        .single();
+
+      if (error || !data) {
+        alert("Email ou mot de passe incorrect");
+        setLoading(false);
+        return;
+      }
+
+      // ✅ sauvegarder artisan connecté
+      localStorage.setItem("artisan", JSON.stringify(data));
+
+      alert("Connexion réussie ✅");
+
+      // ✅ redirection vers dashboard
+      router.push("/dashboard");
+
+    } catch (err) {
+      console.log(err);
       alert("Erreur connexion");
-    } else {
-      alert("Connexion réussie !");
     }
+
+    setLoading(false);
   };
 
   return (
     <div style={{ padding: 20 }}>
 
-      <h1>Connexion</h1>
+      <h1>Connexion Artisan</h1>
 
-      <form onSubmit={login} style={formStyle}>
+      <form
+        onSubmit={connecter}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 10,
+          maxWidth: 400
+        }}
+      >
 
-        <input name="email" placeholder="Email" onChange={handleChange} />
-        <input name="password" type="password" placeholder="Mot de passe" onChange={handleChange} />
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-        <button type="submit">
-          Se connecter
+        <input
+          type="password"
+          placeholder="Mot de passe"
+          value={motDePasse}
+          onChange={(e) => setMotDePasse(e.target.value)}
+          required
+        />
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Connexion..." : "Se connecter"}
         </button>
 
       </form>
@@ -48,10 +88,3 @@ export default function Connexion() {
     </div>
   );
 }
-
-const formStyle = {
-  display: "flex",
-  flexDirection: "column",
-  gap: 10,
-  maxWidth: 400
-};

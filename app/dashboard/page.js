@@ -2,19 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "../supabase";
+import { supabase } from "@/lib/supabase";
 
 export default function Dashboard() {
 
   const router = useRouter();
 
   const [artisan, setArtisan] = useState(null);
-
-  const [nom, setNom] = useState("");
-  const [telephone, setTelephone] = useState("");
-  const [quartier, setQuartier] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
 
@@ -22,206 +18,199 @@ export default function Dashboard() {
 
     if (!data) {
       router.push("/connexion");
-    } else {
-
-      const user = JSON.parse(data);
-
-      setArtisan(user);
-
-      setNom(user.nom || "");
-      setTelephone(user.telephone || "");
-      setQuartier(user.quartier || "");
-      setDescription(user.description || "");
-      setImage(user.image || "");
+      return;
     }
+
+    setArtisan(JSON.parse(data));
 
   }, []);
 
-  // UPLOAD IMAGE
-  const uploadImage = async (e) => {
-
-    const file = e.target.files[0];
-
-    if (!file) return;
-
-    const fileName = Date.now() + file.name;
-
-    const { error } = await supabase.storage
-      .from("depanngabon")
-      .upload(fileName, file);
-
-    if (!error) {
-
-      const { data } = supabase.storage
-        .from("depanngabon")
-        .getPublicUrl(fileName);
-
-      setImage(data.publicUrl);
-
-    } else {
-      console.log(error);
-      alert("Erreur upload image");
-    }
+  const handleChange = (e) => {
+    setArtisan({
+      ...artisan,
+      [e.target.name]: e.target.value
+    });
   };
 
-  // SAUVEGARDE PROFIL
-  const sauvegarder = async () => {
+  const updateProfile = async (e) => {
+    e.preventDefault();
 
-    const { error } = await supabase
-      .from("artisans")
-      .update({
-        nom,
-        telephone,
-        quartier,
-        description,
-        image
-      })
-      .eq("id", artisan.id);
+    setLoading(true);
 
-    if (!error) {
+    try {
 
-      const updatedUser = {
-        ...artisan,
-        nom,
-        telephone,
-        quartier,
-        description,
-        image
-      };
+      let imageUrl = artisan.image;
 
-      localStorage.setItem(
-        "artisan",
-        JSON.stringify(updatedUser)
-      );
+      // ✅ upload nouvelle image
+      if (image) {
 
-      setArtisan(updatedUser);
+        const filePath = `artisans/${Date.now()}-${image.name.replace(/\s/g, "_")}`;
 
-      alert("Profil mis à jour !");
-    } else {
-      console.log(error);
-      alert("Erreur modification");
+        const { error: uploadError } = await supabase.storage
+          .from("artisans")
+          .upload(filePath, image);
+
+        if (uploadError) {
+          alert("Erreur upload image");
+          setLoading(false);
+          return;
+        }
+
+        const { data } = supabase.storage
+          .from("artisans")
+          .getPublicUrl(filePath);
+
+        imageUrl = data.publicUrl;
+      }
+
+      // ✅ update supabase
+      const { error } = await supabase
+        .from("artisans")
+        .update({
+          nom: artisan.nom,
+          telephone: artisan.telephone,
+          email: artisan.email,
+          mot_de_passe: artisan.mot_de_passe,
+          metier: artisan.metier,
+          quartier: artisan.quartier,
+          description: artisan.description,
+          image: imageUrl
+        })
+        .eq("id", artisan.id);
+
+      if (error) {
+        console.log(error);
+        alert("Erreur modification");
+      } else {
+
+        const updatedArtisan = {
+          ...artisan,
+          image: imageUrl
+        };
+
+        localStorage.setItem(
+          "artisan",
+          JSON.stringify(updatedArtisan)
+        );
+
+        setArtisan(updatedArtisan);
+
+        alert("Profil mis à jour ✅");
+      }
+
+    } catch (err) {
+      console.log(err);
+      alert("Erreur générale");
     }
+
+    setLoading(false);
   };
 
-  // DECONNEXION
   const logout = () => {
     localStorage.removeItem("artisan");
-    router.push("/");
+    router.push("/connexion");
   };
 
-  if (!artisan) return null;
+  if (!artisan) {
+    return <p>Chargement...</p>;
+  }
 
   return (
-    <div style={{
-      padding: 20,
-      maxWidth: 500,
-      margin: "auto"
-    }}>
+    <div style={{ padding: 20 }}>
 
-      <h1>Mon Profil 👤</h1>
+      <h1>Espace Artisan</h1>
 
-      {/* IMAGE */}
-      {image && (
+      {artisan.image && (
         <img
-          src={image}
-          alt=""
+          src={artisan.image}
+          alt="artisan"
+          width={150}
           style={{
-            width: 120,
-            height: 120,
-            borderRadius: "50%",
-            objectFit: "cover",
+            borderRadius: 10,
             marginBottom: 20
           }}
         />
       )}
 
-      <input type="file" onChange={uploadImage} />
+      <form
+        onSubmit={updateProfile}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 10,
+          maxWidth: 400
+        }}
+      >
 
-      <br /><br />
+        <input
+          name="nom"
+          value={artisan.nom}
+          onChange={handleChange}
+        />
 
-      <input
-        value={nom}
-        onChange={(e) => setNom(e.target.value)}
-        placeholder="Nom"
-        style={input}
-      />
+        <input
+          name="telephone"
+          value={artisan.telephone}
+          onChange={handleChange}
+        />
 
-      <br /><br />
+        <input
+          name="email"
+          value={artisan.email}
+          onChange={handleChange}
+        />
 
-      <input
-        value={telephone}
-        onChange={(e) => setTelephone(e.target.value)}
-        placeholder="Téléphone"
-        style={input}
-      />
+        <input
+          name="mot_de_passe"
+          value={artisan.mot_de_passe}
+          onChange={handleChange}
+        />
 
-      <br /><br />
+        <select
+          name="metier"
+          value={artisan.metier}
+          onChange={handleChange}
+        >
+          <option value="electricien">Électricien</option>
+          <option value="plombier">Plombier</option>
+          <option value="mecanicien">Mécanicien</option>
+          <option value="macon">Maçon</option>
+          <option value="charpentier">Charpentier</option>
+        </select>
 
-      <input
-        value={quartier}
-        onChange={(e) => setQuartier(e.target.value)}
-        placeholder="Quartier"
-        style={input}
-      />
+        <input
+          name="quartier"
+          value={artisan.quartier}
+          onChange={handleChange}
+        />
 
-      <br /><br />
+        <textarea
+          name="description"
+          value={artisan.description}
+          onChange={handleChange}
+        />
 
-      <textarea
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="Compétences"
-        style={textarea}
-      />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImage(e.target.files[0])}
+        />
 
-      <br /><br />
+        <button type="submit" disabled={loading}>
+          {loading ? "Modification..." : "Mettre à jour"}
+        </button>
 
-      <button onClick={sauvegarder} style={button}>
-        Sauvegarder
-      </button>
+      </form>
 
-      <br /><br />
-
-      <button onClick={logout} style={logoutBtn}>
+      <button
+        onClick={logout}
+        style={{
+          marginTop: 20
+        }}
+      >
         Déconnexion
       </button>
 
     </div>
   );
 }
-
-const input = {
-  width: "100%",
-  padding: 12,
-  borderRadius: 10,
-  border: "1px solid #ccc"
-};
-
-const textarea = {
-  width: "100%",
-  height: 120,
-  padding: 12,
-  borderRadius: 10,
-  border: "1px solid #ccc"
-};
-
-const button = {
-  width: "100%",
-  padding: 12,
-  border: "none",
-  borderRadius: 10,
-  background: "#0ea5e9",
-  color: "white",
-  fontWeight: "bold",
-  cursor: "pointer"
-};
-
-const logoutBtn = {
-  width: "100%",
-  padding: 12,
-  border: "none",
-  borderRadius: 10,
-  background: "red",
-  color: "white",
-  fontWeight: "bold",
-  cursor: "pointer"
-};
