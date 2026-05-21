@@ -3,8 +3,11 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <div style={pageStyle}>
+
+      {/* OVERLAY */}
       <div style={overlayStyle}>
 
+        {/* LOGO */}
         <img
           src="/bg.jpg.png"
           alt="logo"
@@ -23,6 +26,7 @@ export default function HomePage() {
           🔧 Choisir un métier
         </h3>
 
+        {/* BOUTONS METIERS */}
         <div style={metierContainer}>
 
           <Link href="/electricien">
@@ -47,23 +51,36 @@ export default function HomePage() {
 
         </div>
 
+        {/* BIOGRAPHIE */}
         <div style={bioCard}>
 
           <h2>👤 À propos du créateur</h2>
 
-          <p><strong>Nom :</strong> EBE OBAME Paul Terence</p>
+          <p>
+            <strong>Nom :</strong> EBE OBAME Paul Terence
+          </p>
 
-          <p><strong>Ville :</strong> Libreville, Gabon</p>
+          <p>
+            <strong>Ville :</strong> Libreville, Gabon
+          </p>
 
-          <p><strong>Date de naissance :</strong> 03/05/2002</p>
+          <p>
+            <strong>Date de naissance :</strong> 03/05/2002
+          </p>
 
-          <p><strong>Email :</strong> ebepaul75@gmail.com</p>
+          <p>
+            <strong>Email :</strong> ebepaul75@gmail.com
+          </p>
 
-          <p><strong>Rôle :</strong> Créateur de Depann'Gabon</p>
+          <p>
+            <strong>Rôle :</strong> Créateur de Depann'Gabon
+          </p>
 
           <p>
             <strong>Description :</strong>
-            Passionné de technologie et de services numériques.
+            Passionné de technologie et de services numériques,
+            avec l’ambition de moderniser la mise en relation
+            entre artisans et clients au Gabon.
           </p>
 
         </div>
@@ -73,7 +90,9 @@ export default function HomePage() {
   );
 }
 
+/* ======================= */
 /* STYLES */
+/* ======================= */
 
 const pageStyle = {
   minHeight: "100vh",
