@@ -3,17 +3,15 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <div style={pageStyle}>
-
-      {/* OVERLAY */}
       <div style={overlayStyle}>
 
-        {/* LOGO */}
         <img
           src="/bg.jpg.png"
-          style={{ width: "90px", marginBottom: "10px" }}
+          alt="logo"
+          style={logoStyle}
         />
 
-        <h1 style={{ fontSize: "42px", marginBottom: "10px" }}>
+        <h1 style={titleStyle}>
           Depann'Gabon
         </h1>
 
@@ -21,11 +19,10 @@ export default function HomePage() {
           Trouvez rapidement des artisans fiables au Gabon
         </p>
 
-        <h3 style={{ marginTop: "30px" }}>
+        <h3 style={subtitleStyle}>
           🔧 Choisir un métier
         </h3>
 
-        {/* BOUTONS METIERS */}
         <div style={metierContainer}>
 
           <Link href="/electricien">
@@ -50,39 +47,23 @@ export default function HomePage() {
 
         </div>
 
-        {/* BIOGRAPHIE */}
-
         <div style={bioCard}>
 
-          <h2 style={{ marginBottom: "15px" }}>
-            👤 À propos du créateur
-          </h2>
+          <h2>👤 À propos du créateur</h2>
+
+          <p><strong>Nom :</strong> EBE OBAME Paul Terence</p>
+
+          <p><strong>Ville :</strong> Libreville, Gabon</p>
+
+          <p><strong>Date de naissance :</strong> 03/05/2002</p>
+
+          <p><strong>Email :</strong> ebepaul75@gmail.com</p>
+
+          <p><strong>Rôle :</strong> Créateur de Depann'Gabon</p>
 
           <p>
-            <strong>Nom :</strong> EBE OBAME Paul Terence
-          </p>
-
-          <p>
-            <strong>Ville :</strong> Libreville, Gabon
-          </p>
-
-          <p>
-            <strong>Date de naissance :</strong> 03/05/2002
-          </p>
-
-          <p>
-            <strong>Email :</strong> ebepaul75@gmail.com
-          </p>
-
-          <p>
-            <strong>Rôle :</strong> Créateur de Depann'Gabon
-          </p>
-
-          <p>
-            <strong>Description :</strong> Passionné de technologie
-            et de services numériques, avec l’ambition de moderniser
-            la mise en relation entre artisans et clients au Gabon
-            grâce à une plateforme simple, rapide et accessible.
+            <strong>Description :</strong>
+            Passionné de technologie et de services numériques.
           </p>
 
         </div>
@@ -92,7 +73,7 @@ export default function HomePage() {
   );
 }
 
-/* PAGE */
+/* STYLES */
 
 const pageStyle = {
   minHeight: "100vh",
@@ -112,17 +93,28 @@ const overlayStyle = {
   color: "white"
 };
 
+const logoStyle = {
+  width: "90px",
+  marginBottom: "10px"
+};
+
+const titleStyle = {
+  fontSize: "42px",
+  marginBottom: "10px"
+};
+
+const subtitleStyle = {
+  marginTop: "30px"
+};
+
 const descriptionStyle = {
   maxWidth: "500px",
   textAlign: "center"
 };
 
-/* METIERS */
-
 const metierContainer = {
   display: "flex",
   gap: "12px",
-  flexWrap: "nowrap",
   overflowX: "auto",
   padding: "10px",
   maxWidth: "100%"
@@ -132,19 +124,16 @@ const btn = {
   padding: "12px 18px",
   borderRadius: "12px",
   border: "none",
-  background: "#0ea5e9",
+  backgroundColor: "#0ea5e9",
   color: "white",
   fontWeight: "bold",
   cursor: "pointer",
   whiteSpace: "nowrap"
 };
 
-/* BIOGRAPHIE */
-
 const bioCard = {
   marginTop: "50px",
   backgroundColor: "rgba(255,255,255,0.12)",
-  backdropFilter: "blur(6px)",
   padding: "25px",
   borderRadius: "20px",
   maxWidth: "700px",
