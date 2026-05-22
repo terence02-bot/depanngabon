@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import React from "react";
 import { supabase } from "@/lib/supabase";
 
 export default function MaconPage() {
@@ -22,19 +21,15 @@ export default function MaconPage() {
   };
 
   return (
-    <div style={pageStyle as React.CSSProperties}>
-      <div style={overlayStyle as React.CSSProperties}>
+    <div style={pageStyle}>
+      <div style={overlayStyle}>
 
         <h1>🧱 Maçons</h1>
 
-        {artisans.length === 0 && <p>Aucun artisan</p>}
-
         {artisans.map((a) => (
-          <div key={a.id} style={cardStyle as React.CSSProperties}>
+          <div key={a.id} style={cardStyle}>
 
-            {a.image && (
-              <img src={a.image} style={imgStyle as React.CSSProperties} />
-            )}
+            {a.image && <img src={a.image} style={imgStyle} />}
 
             <h2>{a.nom}</h2>
             <p>📞 {a.telephone}</p>
@@ -49,11 +44,11 @@ export default function MaconPage() {
   );
 }
 
-/* ================= STYLE ================= */
+/* STYLES */
 
 const pageStyle = {
   minHeight: "100vh",
-  backgroundImage: "url('/macon.jpg')",
+  backgroundImage: "url('/macon.jepg')",
   backgroundSize: "cover",
   backgroundPosition: "center"
 };
@@ -81,6 +76,5 @@ const imgStyle = {
   width: 100,
   height: 100,
   borderRadius: "50%",
-  objectFit: "cover",
-  marginBottom: 10
+  objectFit: "cover"
 };
