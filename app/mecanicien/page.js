@@ -1,24 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import React from "react";
 import { supabase } from "@/lib/supabase";
-
-import {
-  page,
-  overlay,
-  title,
-  searchInput,
-  card,
-  img,
-  phoneStyle,
-  rateBtn,
-  ratingContainer
-} from "../../styles/globalStyles";
 
 export default function MecanicienPage() {
 
   const [artisans, setArtisans] = useState([]);
-  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetchArtisans();
@@ -33,48 +21,62 @@ export default function MecanicienPage() {
     setArtisans(data || []);
   };
 
-  const noter = async (id, note) => {
-    await supabase.from("artisans").update({ avis: note }).eq("id", id);
-    fetchArtisans();
-  };
-
   return (
-    <div style={{ ...page, backgroundImage: "url('/mecanicien.jpg')" }}>
-      <div style={overlay}>
+    <div style={pageStyle as React.CSSProperties}>
+      <div style={overlayStyle as React.CSSProperties}>
 
-        <h1 style={title}>🔧 Mécaniciens</h1>
+        <h1>🔧 Mécaniciens</h1>
 
-        <input style={searchInput}
-          placeholder="Rechercher ville/quartier"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        {artisans.map((a) => (
+          <div key={a.id} style={cardStyle as React.CSSProperties}>
 
-        {artisans.map(a => (
-          <div key={a.id} style={card}>
-
-            <img src={a.image} style={img} />
+            {a.image && <img src={a.image} style={imgStyle as React.CSSProperties} />}
 
             <h2>{a.nom}</h2>
-
-            <p>📞 <a href={`tel:${a.telephone}`} style={phoneStyle}>{a.telephone}</a></p>
+            <p>📞 {a.telephone}</p>
             <p>📍 {a.quartier}</p>
-            <p>🌍 {a.ville}</p>
-            <p>⭐ {a.avis || 5}/5</p>
-
-            <div style={ratingContainer}>
-              {[1,2,3,4,5].map(n => (
-                <button key={n} onClick={() => noter(a.id, n)} style={rateBtn}>
-                  ⭐{n}
-                </button>
-              ))}
-            </div>
-
             <p>{a.description}</p>
 
           </div>
         ))}
+
       </div>
     </div>
   );
 }
+
+/* STYLES */
+
+const pageStyle = {
+  minHeight: "100vh",
+  backgroundImage: "url('/mecanicien.jpg')",
+  backgroundSize: "cover",
+  backgroundPosition: "center"
+};
+
+const overlayStyle = {
+  minHeight: "100vh",
+  backgroundColor: "rgba(0,0,0,0.7)",
+  padding: 20,
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  color: "white"
+};
+
+const cardStyle = {
+  backgroundColor: "rgba(255,255,255,0.1)",
+  padding: 15,
+  marginBottom: 15,
+  borderRadius: 12,
+  width: "100%",
+  maxWidth: 500
+};
+
+const imgStyle = {
+  width: 100,
+  height: 100,
+  borderRadius: "50%",
+  objectFit: "cover",
+  marginBottom: 10
+};
