@@ -68,7 +68,7 @@ export default function CharpentierPage() {
 
 const pageStyle = {
   minHeight: "100vh",
-  backgroundImage: "url('/charpentier.jpg')",
+  backgroundImage: "url('/charpentier.jpeg')",
   backgroundSize: "cover",
   backgroundPosition: "center",
   position: "relative"
