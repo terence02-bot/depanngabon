@@ -1,9 +1,9 @@
 import Link from "next/link";
+import React from "react";
 
 export default function HomePage() {
   return (
     <div style={pageStyle}>
-
       <div style={overlayStyle}>
 
         {/* LOGO */}
@@ -99,17 +99,17 @@ export default function HomePage() {
 }
 
 /* ===================== */
-/* STYLE */
+/* STYLE TYPESCRIPT FIX */
 /* ===================== */
 
-const pageStyle = {
+const pageStyle: React.CSSProperties = {
   minHeight: "100vh",
   backgroundImage: "url('/bg.jpg.png')",
   backgroundSize: "cover",
   backgroundPosition: "center"
 };
 
-const overlayStyle = {
+const overlayStyle: React.CSSProperties = {
   backgroundColor: "rgba(0,0,0,0.70)",
   minHeight: "100vh",
   padding: 20,
@@ -119,7 +119,7 @@ const overlayStyle = {
   color: "white"
 };
 
-const box = {
+const box: React.CSSProperties = {
   maxWidth: 700,
   backgroundColor: "rgba(255,255,255,0.08)",
   padding: 20,
@@ -128,7 +128,7 @@ const box = {
   backdropFilter: "blur(6px)"
 };
 
-const bioBox = {
+const bioBox: React.CSSProperties = {
   maxWidth: 700,
   backgroundColor: "rgba(0,150,255,0.15)",
   padding: 20,
@@ -137,13 +137,13 @@ const bioBox = {
   border: "1px solid rgba(255,255,255,0.2)"
 };
 
-const desc = {
+const desc: React.CSSProperties = {
   maxWidth: 500,
   textAlign: "center",
   marginTop: 10
 };
 
-const btnContainer = {
+const btnContainer: React.CSSProperties = {
   display: "flex",
   gap: 12,
   flexWrap: "wrap",
@@ -151,7 +151,7 @@ const btnContainer = {
   marginTop: 10
 };
 
-const btn = {
+const btn: React.CSSProperties = {
   padding: "12px 18px",
   borderRadius: 12,
   border: "none",

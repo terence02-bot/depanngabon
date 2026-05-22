@@ -6,6 +6,8 @@ import { supabase } from "@/lib/supabase";
 export default function ElectricienPage() {
 
   const [artisans, setArtisans] = useState([]);
+  const [searchVille, setSearchVille] = useState("");
+  const [searchQuartier, setSearchQuartier] = useState("");
 
   useEffect(() => {
     fetchArtisans();
@@ -26,26 +28,45 @@ export default function ElectricienPage() {
 
         <h1>⚡ Électriciens</h1>
 
-        {artisans.map((a) => (
-          <div key={a.id} style={cardStyle}>
+        <input
+          type="text"
+          placeholder="🏙️ Ville"
+          value={searchVille}
+          onChange={(e) => setSearchVille(e.target.value)}
+          style={inputStyle}
+        />
 
-            {a.image && <img src={a.image} style={imgStyle} />}
+        <input
+          type="text"
+          placeholder="📍 Quartier"
+          value={searchQuartier}
+          onChange={(e) => setSearchQuartier(e.target.value)}
+          style={inputStyle}
+        />
 
-            <h2>{a.nom}</h2>
-            <p>📞 {a.telephone}</p>
-            <p>📍 {a.quartier}</p>
-            <p>{a.description}</p>
-
-          </div>
-        ))}
-
+        {artisans
+          .filter((a) => {
+            return (
+              a.quartier?.toLowerCase().includes(searchQuartier.toLowerCase()) &&
+              (a.ville?.toLowerCase().includes(searchVille.toLowerCase()) || searchVille === "")
+            );
+          })
+          .map((a) => (
+            <div key={a.id} style={cardStyle}>
+              {a.image && <img src={a.image} style={imgStyle} alt={a.nom} />}
+              <h2>{a.nom}</h2>
+              <p>📞 {a.telephone}</p>
+              <p>🏙️ {a.ville}</p>
+              <p>📍 {a.quartier}</p>
+              <p>{a.description}</p>
+            </div>
+          ))}
       </div>
     </div>
   );
 }
 
 /* STYLES */
-
 const pageStyle = {
   minHeight: "100vh",
   backgroundImage: "url('/electricien.jpg')",
@@ -77,4 +98,13 @@ const imgStyle = {
   height: 100,
   borderRadius: "50%",
   objectFit: "cover"
+};
+
+const inputStyle = {
+  padding: 10,
+  marginBottom: 10,
+  borderRadius: 10,
+  border: "none",
+  width: "100%",
+  maxWidth: 300
 };
