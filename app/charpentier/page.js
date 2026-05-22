@@ -3,110 +3,101 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
+import {
+  page,
+  overlay,
+  title,
+  searchInput,
+  card,
+  img,
+  phoneStyle,
+  rateBtn,
+  ratingContainer
+} from "../../styles/globalStyles";
+
 export default function CharpentierPage() {
 
   const [artisans, setArtisans] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetchArtisans();
   }, []);
 
   const fetchArtisans = async () => {
-
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("artisans")
       .select("*")
       .eq("metier", "charpentier");
 
-    if (error) {
-      console.log(error);
-    } else {
-      setArtisans(data || []);
-    }
+    setArtisans(data || []);
+  };
+
+  const noter = async (id, note) => {
+    await supabase
+      .from("artisans")
+      .update({ avis: note })
+      .eq("id", id);
+
+    fetchArtisans();
   };
 
   return (
-    <div style={pageStyle}>
+    <div style={{ ...page, backgroundImage: "url('/charpentier.jpeg')" }}>
+      <div style={overlay}>
 
-      {/* overlay */}
-      <div style={overlayStyle}></div>
+        <h1 style={title}>🪚 Charpentiers</h1>
 
-      {/* content */}
-      <div style={contentStyle}>
+        <input
+          style={searchInput}
+          placeholder="Rechercher ville ou quartier"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
 
-        <h1 style={{ color: "white" }}>🪚 Charpentiers</h1>
+        {artisans.length === 0 && <p>Aucun artisan trouvé</p>}
 
-        {artisans.length === 0 && (
-          <p style={{ color: "white" }}>Aucun artisan</p>
-        )}
+        {artisans
+          .filter(a =>
+            a.quartier?.toLowerCase().includes(search.toLowerCase()) ||
+            a.ville?.toLowerCase().includes(search.toLowerCase())
+          )
+          .map(a => (
+            <div key={a.id} style={card}>
 
-        {artisans.map((artisan) => (
-          <div key={artisan.id} style={card}>
+              {a.image && <img src={a.image} style={img} />}
 
-            {artisan.image ? (
-              <img src={artisan.image} alt={artisan.nom} style={img} />
-            ) : (
-              <p>Pas de photo</p>
-            )}
+              <h2>{a.nom}</h2>
 
-            <h2>{artisan.nom}</h2>
-            <p>📞 {artisan.telephone}</p>
-            <p>📍 {artisan.quartier}</p>
-            <p>{artisan.description}</p>
+              <p>
+                📞 <a href={`tel:${a.telephone}`} style={phoneStyle}>
+                  {a.telephone}
+                </a>
+              </p>
 
-          </div>
-        ))}
+              <p>📍 {a.quartier}</p>
+              <p>🌍 {a.ville}</p>
+
+              <p>⭐ {a.avis || 5}/5</p>
+
+              <div style={ratingContainer}>
+                {[1,2,3,4,5].map(n => (
+                  <button
+                    key={n}
+                    onClick={() => noter(a.id, n)}
+                    style={rateBtn}
+                  >
+                    ⭐{n}
+                  </button>
+                ))}
+              </div>
+
+              <p>{a.description}</p>
+
+            </div>
+          ))}
 
       </div>
     </div>
   );
 }
-
-/* ===================== */
-/* BACKGROUND           */
-/* ===================== */
-
-const pageStyle = {
-  minHeight: "100vh",
-  backgroundImage: "url('/charpentier.jpeg')",
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  position: "relative"
-};
-
-const overlayStyle = {
-  position: "absolute",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
-  backgroundColor: "rgba(0,0,0,0.5)",
-  zIndex: 1
-};
-
-const contentStyle = {
-  position: "relative",
-  zIndex: 2,
-  padding: 20
-};
-
-/* ===================== */
-/* CARDS                */
-/* ===================== */
-
-const card = {
-  backgroundColor: "rgba(255,255,255,0.95)",
-  border: "1px solid #ddd",
-  padding: 15,
-  marginBottom: 15,
-  borderRadius: 10
-};
-
-const img = {
-  width: 100,
-  height: 100,
-  borderRadius: "50%",
-  objectFit: "cover",
-  marginBottom: 10,
-  display: "block"
-};

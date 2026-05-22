@@ -3,115 +3,91 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
+import {
+  page,
+  overlay,
+  title,
+  searchInput,
+  card,
+  img,
+  phoneStyle,
+  rateBtn,
+  ratingContainer
+} from "@/styles/globalStyles";
+
 export default function ElectricienPage() {
 
   const [artisans, setArtisans] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetchArtisans();
   }, []);
 
   const fetchArtisans = async () => {
-
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("artisans")
       .select("*")
       .eq("metier", "electricien");
 
-    if (error) {
-      console.log("ERROR FETCH:", error);
-    } else {
-      setArtisans(data || []);
-    }
+    setArtisans(data || []);
+  };
+
+  const noter = async (id, note) => {
+    await supabase.from("artisans").update({ avis: note }).eq("id", id);
+    fetchArtisans();
   };
 
   return (
-    <div style={pageStyle}>
+    <div style={{ ...page, backgroundImage: "url('/electricien.jpg')" }}>
+      <div style={overlay}>
 
-      {/* OVERLAY */}
-      <div style={overlayStyle}></div>
+        <h1 style={title}>⚡ Électriciens</h1>
 
-      {/* CONTENT */}
-      <div style={contentStyle}>
+        <input
+          style={searchInput}
+          placeholder="Rechercher ville ou quartier"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
 
-        <h1 style={{ color: "white" }}>⚡ Électriciens</h1>
+        {artisans
+          .filter(a =>
+            a.quartier?.toLowerCase().includes(search.toLowerCase()) ||
+            a.ville?.toLowerCase().includes(search.toLowerCase())
+          )
+          .map(a => (
+            <div key={a.id} style={card}>
 
-        {artisans.length === 0 && (
-          <p style={{ color: "white" }}>Aucun artisan</p>
-        )}
+              <img src={a.image} style={img} />
 
-        {artisans.map((artisan) => (
+              <h2>{a.nom}</h2>
 
-          <div key={artisan.id} style={card}>
+              <p>
+                📞 <a href={`tel:${a.telephone}`} style={phoneStyle}>
+                  {a.telephone}
+                </a>
+              </p>
 
-            {artisan.image ? (
-              <img
-                src={artisan.image}
-                alt={artisan.nom}
-                style={img}
-              />
-            ) : (
-              <p style={{ fontStyle: "italic" }}>Pas de photo</p>
-            )}
+              <p>📍 {a.quartier}</p>
+              <p>🌍 {a.ville}</p>
 
-            <h2>{artisan.nom}</h2>
-            <p>📞 {artisan.telephone}</p>
-            <p>📍 {artisan.quartier}</p>
-            <p>{artisan.description}</p>
+              <p>⭐ {a.avis || 5}/5</p>
 
-          </div>
+              <div style={ratingContainer}>
+                {[1,2,3,4,5].map(n => (
+                  <button key={n} onClick={() => noter(a.id, n)} style={rateBtn}>
+                    ⭐{n}
+                  </button>
+                ))}
+              </div>
 
-        ))}
+              <p>{a.description}</p>
+
+            </div>
+          ))}
 
       </div>
     </div>
   );
 }
-
-/* ===================== */
-/* STYLE BACKGROUND      */
-/* ===================== */
-
-const pageStyle = {
-  minHeight: "100vh",
-  backgroundImage: "url('/electricien.jpg')",
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  position: "relative"
-};
-
-const overlayStyle = {
-  position: "absolute",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
-  backgroundColor: "rgba(0,0,0,0.5)",
-  zIndex: 1
-};
-
-const contentStyle = {
-  position: "relative",
-  zIndex: 2,
-  padding: 20
-};
-
-/* ===================== */
-/* CARTE ARTISAN        */
-/* ===================== */
-
-const card = {
-  backgroundColor: "rgba(255,255,255,0.95)",
-  padding: 15,
-  marginBottom: 15,
-  borderRadius: 10
-};
-
-const img = {
-  width: 100,
-  height: 100,
-  borderRadius: "50%",
-  objectFit: "cover",
-  marginBottom: 10,
-  display: "block"
-};
