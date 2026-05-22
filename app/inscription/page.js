@@ -82,7 +82,15 @@ export default function InscriptionPage() {
 
       <form onSubmit={handleSubmit} style={formStyle}>
 
-        <h1>Inscription Artisan</h1>
+        <img
+          src="/bg.jpg.png"
+          alt="logo"
+          style={logoStyle}
+        />
+
+        <h1 style={titleStyle}>
+          Inscription Artisan
+        </h1>
 
         <input
           type="text"
@@ -177,31 +185,49 @@ const pageStyle = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  backgroundColor: "#0f172a",
+  backgroundImage: "url('/bg.jpg.png')",
+  backgroundSize: "cover",
+  backgroundPosition: "center",
   padding: 20
 };
 
 const formStyle = {
-  backgroundColor: "white",
+  backgroundColor: "rgba(0,0,0,0.75)",
+  backdropFilter: "blur(6px)",
   padding: 30,
-  borderRadius: 15,
+  borderRadius: 20,
   width: "100%",
   maxWidth: 450,
   display: "flex",
   flexDirection: "column",
-  gap: 15
+  gap: 15,
+  color: "white",
+  boxShadow: "0 0 20px rgba(0,0,0,0.3)"
+};
+
+const logoStyle = {
+  width: 90,
+  alignSelf: "center",
+  marginBottom: 10
+};
+
+const titleStyle = {
+  textAlign: "center",
+  marginBottom: 10
 };
 
 const inputStyle = {
   padding: 12,
-  borderRadius: 8,
-  border: "1px solid #ccc"
+  borderRadius: 10,
+  border: "none",
+  outline: "none"
 };
 
 const textareaStyle = {
   padding: 12,
-  borderRadius: 8,
-  border: "1px solid #ccc",
+  borderRadius: 10,
+  border: "none",
+  outline: "none",
   minHeight: 100
 };
 
@@ -212,5 +238,6 @@ const buttonStyle = {
   backgroundColor: "#0ea5e9",
   color: "white",
   fontWeight: "bold",
-  cursor: "pointer"
+  cursor: "pointer",
+  fontSize: 16
 };
