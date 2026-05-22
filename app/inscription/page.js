@@ -5,299 +5,212 @@ import { supabase } from "@/lib/supabase";
 
 export default function InscriptionPage() {
 
-  const [form, setForm] = useState({
-    nom: "",
-    telephone: "",
-    quartier: "",
-    ville: "",
-    metier: "",
-    description: "",
-    image: "",
-    email: "",
-    password: ""
-  });
+  const [nom, setNom] = useState("");
+  const [telephone, setTelephone] = useState("");
+  const [quartier, setQuartier] = useState("");
+  const [ville, setVille] = useState("");
+  const [metier, setMetier] = useState("");
+  const [description, setDescription] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleImage = async (e) => {
-
-    const file = e.target.files[0];
-
-    if (!file) return;
-
-    const fileName = Date.now() + "-" + file.name;
-
-    const { error: uploadError } = await supabase
-      .storage
-      .from("artisans")
-      .upload(fileName, file);
-
-    if (uploadError) {
-      alert("Erreur upload image");
-      return;
-    }
-
-    const { data } = supabase
-      .storage
-      .from("artisans")
-      .getPublicUrl(fileName);
-
-    setForm({
-      ...form,
-      image: data.publicUrl
-    });
-  };
-
-  const inscrire = async (e) => {
-
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
+    try {
 
-    const { data: authData, error: authError } =
-      await supabase.auth.signUp({
-        email: form.email,
-        password: form.password
+      // =========================
+      // INSCRIPTION AUTH
+      // =========================
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
       });
 
-    if (authError) {
-      alert(authError.message);
-      setLoading(false);
-      return;
-    }
+      if (error) {
+        alert(error.message);
+        console.log(error);
+        return;
+      }
 
-    const { error } = await supabase
-      .from("artisans")
-      .insert([
-        {
-          nom: form.nom,
-          telephone: form.telephone,
-          quartier: form.quartier,
-          ville: form.ville,
-          metier: form.metier,
-          description: form.description,
-          image: form.image,
-          email: form.email,
-          user_id: authData.user?.id,
-          avis: 5
-        }
-      ]);
+      // =========================
+      // AJOUT TABLE ARTISANS
+      // =========================
 
-    setLoading(false);
+      const { error: artisanError } = await supabase
+        .from("artisans")
+        .insert([
+          {
+            nom,
+            telephone,
+            quartier,
+            ville,
+            metier,
+            description,
+            email,
+          },
+        ]);
 
-    if (error) {
-      console.log(error);
-      alert("Erreur inscription");
-    } else {
+      if (artisanError) {
+        alert(artisanError.message);
+        console.log(artisanError);
+        return;
+      }
 
-      alert("Inscription réussie !");
+      alert("Inscription réussie ✅");
 
-      setForm({
-        nom: "",
-        telephone: "",
-        quartier: "",
-        ville: "",
-        metier: "",
-        description: "",
-        image: "",
-        email: "",
-        password: ""
-      });
+      // RESET
+
+      setNom("");
+      setTelephone("");
+      setQuartier("");
+      setVille("");
+      setMetier("");
+      setDescription("");
+      setEmail("");
+      setPassword("");
+
+    } catch (err) {
+      console.log(err);
+      alert("Erreur d'inscription");
     }
   };
 
   return (
     <div style={pageStyle}>
 
-      <div style={overlayStyle}>
+      <form onSubmit={handleSubmit} style={formStyle}>
 
-        <h1 style={title}>
-          Inscription Artisan
-        </h1>
+        <h1>Inscription Artisan</h1>
 
-        <form
-          onSubmit={inscrire}
-          style={formStyle}
+        <input
+          type="text"
+          placeholder="Nom complet"
+          value={nom}
+          onChange={(e) => setNom(e.target.value)}
+          style={inputStyle}
+          required
+        />
+
+        <input
+          type="text"
+          placeholder="Téléphone"
+          value={telephone}
+          onChange={(e) => setTelephone(e.target.value)}
+          style={inputStyle}
+          required
+        />
+
+        <input
+          type="text"
+          placeholder="Ville"
+          value={ville}
+          onChange={(e) => setVille(e.target.value)}
+          style={inputStyle}
+          required
+        />
+
+        <input
+          type="text"
+          placeholder="Quartier"
+          value={quartier}
+          onChange={(e) => setQuartier(e.target.value)}
+          style={inputStyle}
+          required
+        />
+
+        <select
+          value={metier}
+          onChange={(e) => setMetier(e.target.value)}
+          style={inputStyle}
+          required
         >
+          <option value="">Choisir un métier</option>
+          <option value="electricien">Électricien</option>
+          <option value="plombier">Plombier</option>
+          <option value="mecanicien">Mécanicien</option>
+          <option value="macon">Maçon</option>
+          <option value="charpentier">Charpentier</option>
+        </select>
 
-          <input
-            name="nom"
-            placeholder="Nom"
-            value={form.nom}
-            onChange={handleChange}
-            style={input}
-          />
+        <textarea
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          style={textareaStyle}
+        />
 
-          <input
-            name="telephone"
-            placeholder="Téléphone"
-            value={form.telephone}
-            onChange={handleChange}
-            style={input}
-          />
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          style={inputStyle}
+          required
+        />
 
-          <input
-            name="quartier"
-            placeholder="Quartier"
-            value={form.quartier}
-            onChange={handleChange}
-            style={input}
-          />
+        <input
+          type="password"
+          placeholder="Mot de passe"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={inputStyle}
+          required
+        />
 
-          <input
-            name="ville"
-            placeholder="Ville"
-            value={form.ville}
-            onChange={handleChange}
-            style={input}
-          />
+        <button type="submit" style={buttonStyle}>
+          S'inscrire
+        </button>
 
-          <select
-            name="metier"
-            value={form.metier}
-            onChange={handleChange}
-            style={input}
-          >
-
-            <option value="">
-              Choisir un métier
-            </option>
-
-            <option value="electricien">
-              Électricien
-            </option>
-
-            <option value="plombier">
-              Plombier
-            </option>
-
-            <option value="mecanicien">
-              Mécanicien
-            </option>
-
-            <option value="macon">
-              Maçon
-            </option>
-
-            <option value="charpentier">
-              Charpentier
-            </option>
-
-          </select>
-
-          <textarea
-            name="description"
-            placeholder="Description"
-            value={form.description}
-            onChange={handleChange}
-            style={textarea}
-          />
-
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImage}
-            style={input}
-          />
-
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            value={form.email}
-            onChange={handleChange}
-            style={input}
-          />
-
-          <input
-            name="password"
-            type="password"
-            placeholder="Mot de passe"
-            value={form.password}
-            onChange={handleChange}
-            style={input}
-          />
-
-          <button
-            type="submit"
-            style={button}
-            disabled={loading}
-          >
-            {loading
-              ? "Chargement..."
-              : "S'inscrire"}
-          </button>
-
-        </form>
-
-      </div>
-
+      </form>
     </div>
   );
 }
 
+/* ===================== */
+/* STYLES */
+/* ===================== */
+
 const pageStyle = {
   minHeight: "100vh",
-  backgroundImage: "url('/bg.jpg.png')",
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  padding: "20px"
-};
-
-const overlayStyle = {
-  backgroundColor: "rgba(0,0,0,0.7)",
-  minHeight: "100vh",
   display: "flex",
-  flexDirection: "column",
+  justifyContent: "center",
   alignItems: "center",
-  padding: "30px",
-  color: "white"
-};
-
-const title = {
-  fontSize: "40px",
-  marginBottom: "30px"
+  backgroundColor: "#0f172a",
+  padding: 20
 };
 
 const formStyle = {
+  backgroundColor: "white",
+  padding: 30,
+  borderRadius: 15,
   width: "100%",
-  maxWidth: "500px",
+  maxWidth: 450,
   display: "flex",
   flexDirection: "column",
-  gap: "15px"
+  gap: 15
 };
 
-const input = {
-  padding: "14px",
-  borderRadius: "12px",
-  border: "none",
-  outline: "none",
-  fontSize: "16px"
+const inputStyle = {
+  padding: 12,
+  borderRadius: 8,
+  border: "1px solid #ccc"
 };
 
-const textarea = {
-  padding: "14px",
-  borderRadius: "12px",
-  border: "none",
-  outline: "none",
-  minHeight: "120px",
-  fontSize: "16px"
+const textareaStyle = {
+  padding: 12,
+  borderRadius: 8,
+  border: "1px solid #ccc",
+  minHeight: 100
 };
 
-const button = {
-  padding: "15px",
-  borderRadius: "12px",
+const buttonStyle = {
+  padding: 14,
   border: "none",
+  borderRadius: 10,
   backgroundColor: "#0ea5e9",
   color: "white",
   fontWeight: "bold",
-  fontSize: "16px",
   cursor: "pointer"
 };
