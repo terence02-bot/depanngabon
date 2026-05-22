@@ -12,15 +12,19 @@ export default function InscriptionPage() {
   const [description, setDescription] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [photo, setPhoto] = useState(null);
+
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (loading) return;
+    setLoading(true);
+
     try {
       // =========================
-      // 1. INSCRIPTION AUTH
+      // 1. AUTH SUPABASE
       // =========================
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -30,13 +34,14 @@ export default function InscriptionPage() {
       if (error) {
         alert(error.message);
         console.log(error);
+        setLoading(false);
         return;
       }
 
       const userId = data?.user?.id;
 
       // =========================
-      // 2. UPLOAD PHOTO (SI EXISTE)
+      // 2. UPLOAD PHOTO
       // =========================
       let photoUrl = "";
 
@@ -50,6 +55,7 @@ export default function InscriptionPage() {
         if (uploadError) {
           alert(uploadError.message);
           console.log(uploadError);
+          setLoading(false);
           return;
         }
 
@@ -80,12 +86,13 @@ export default function InscriptionPage() {
       if (artisanError) {
         alert(artisanError.message);
         console.log(artisanError);
+        setLoading(false);
         return;
       }
 
       alert("Inscription réussie ✅");
 
-      // RESET
+      // RESET FORM
       setNom("");
       setTelephone("");
       setQuartier("");
@@ -95,10 +102,13 @@ export default function InscriptionPage() {
       setEmail("");
       setPassword("");
       setPhoto(null);
+
     } catch (err) {
       console.log(err);
       alert("Erreur d'inscription");
     }
+
+    setLoading(false);
   };
 
   return (
@@ -165,7 +175,7 @@ export default function InscriptionPage() {
           style={textareaStyle}
         />
 
-        {/* 📸 PHOTO */}
+        {/* PHOTO */}
         <input
           type="file"
           accept="image/*"
@@ -191,8 +201,12 @@ export default function InscriptionPage() {
           required
         />
 
-        <button type="submit" style={buttonStyle}>
-          S'inscrire
+        <button
+          type="submit"
+          style={buttonStyle}
+          disabled={loading}
+        >
+          {loading ? "Inscription..." : "S'inscrire"}
         </button>
       </form>
     </div>
