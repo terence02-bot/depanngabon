@@ -4,7 +4,6 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 export default function InscriptionPage() {
-
   const [nom, setNom] = useState("");
   const [telephone, setTelephone] = useState("");
   const [quartier, setQuartier] = useState("");
@@ -14,15 +13,15 @@ export default function InscriptionPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [photo, setPhoto] = useState(null);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-
       // =========================
-      // INSCRIPTION AUTH
+      // 1. INSCRIPTION AUTH
       // =========================
-
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -34,14 +33,39 @@ export default function InscriptionPage() {
         return;
       }
 
-      // =========================
-      // AJOUT TABLE ARTISANS
-      // =========================
+      const userId = data?.user?.id;
 
+      // =========================
+      // 2. UPLOAD PHOTO (SI EXISTE)
+      // =========================
+      let photoUrl = "";
+
+      if (photo) {
+        const fileName = `${Date.now()}-${photo.name}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from("photos")
+          .upload(fileName, photo);
+
+        if (uploadError) {
+          alert(uploadError.message);
+          console.log(uploadError);
+          return;
+        }
+
+        photoUrl = supabase.storage
+          .from("photos")
+          .getPublicUrl(fileName).data.publicUrl;
+      }
+
+      // =========================
+      // 3. INSERT TABLE ARTISANS
+      // =========================
       const { error: artisanError } = await supabase
         .from("artisans")
         .insert([
           {
+            user_id: userId,
             nom,
             telephone,
             quartier,
@@ -49,6 +73,7 @@ export default function InscriptionPage() {
             metier,
             description,
             email,
+            photo: photoUrl,
           },
         ]);
 
@@ -61,7 +86,6 @@ export default function InscriptionPage() {
       alert("Inscription réussie ✅");
 
       // RESET
-
       setNom("");
       setTelephone("");
       setQuartier("");
@@ -70,7 +94,7 @@ export default function InscriptionPage() {
       setDescription("");
       setEmail("");
       setPassword("");
-
+      setPhoto(null);
     } catch (err) {
       console.log(err);
       alert("Erreur d'inscription");
@@ -79,18 +103,10 @@ export default function InscriptionPage() {
 
   return (
     <div style={pageStyle}>
-
       <form onSubmit={handleSubmit} style={formStyle}>
+        <img src="/bg.jpg.png" alt="logo" style={logoStyle} />
 
-        <img
-          src="/bg.jpg.png"
-          alt="logo"
-          style={logoStyle}
-        />
-
-        <h1 style={titleStyle}>
-          Inscription Artisan
-        </h1>
+        <h1 style={titleStyle}>Inscription Artisan</h1>
 
         <input
           type="text"
@@ -149,6 +165,14 @@ export default function InscriptionPage() {
           style={textareaStyle}
         />
 
+        {/* 📸 PHOTO */}
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setPhoto(e.target.files[0])}
+          style={{ color: "white" }}
+        />
+
         <input
           type="email"
           placeholder="Email"
@@ -170,7 +194,6 @@ export default function InscriptionPage() {
         <button type="submit" style={buttonStyle}>
           S'inscrire
         </button>
-
       </form>
     </div>
   );
@@ -188,7 +211,7 @@ const pageStyle = {
   backgroundImage: "url('/bg.jpg.png')",
   backgroundSize: "cover",
   backgroundPosition: "center",
-  padding: 20
+  padding: 20,
 };
 
 const formStyle = {
@@ -202,25 +225,25 @@ const formStyle = {
   flexDirection: "column",
   gap: 15,
   color: "white",
-  boxShadow: "0 0 20px rgba(0,0,0,0.3)"
+  boxShadow: "0 0 20px rgba(0,0,0,0.3)",
 };
 
 const logoStyle = {
   width: 90,
   alignSelf: "center",
-  marginBottom: 10
+  marginBottom: 10,
 };
 
 const titleStyle = {
   textAlign: "center",
-  marginBottom: 10
+  marginBottom: 10,
 };
 
 const inputStyle = {
   padding: 12,
   borderRadius: 10,
   border: "none",
-  outline: "none"
+  outline: "none",
 };
 
 const textareaStyle = {
@@ -228,7 +251,7 @@ const textareaStyle = {
   borderRadius: 10,
   border: "none",
   outline: "none",
-  minHeight: 100
+  minHeight: 100,
 };
 
 const buttonStyle = {
@@ -239,5 +262,5 @@ const buttonStyle = {
   color: "white",
   fontWeight: "bold",
   cursor: "pointer",
-  fontSize: 16
+  fontSize: 16,
 };
