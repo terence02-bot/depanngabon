@@ -1,283 +1,136 @@
-"use client";
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+  if (loading) return;
+  setLoading(true);
 
-export default function InscriptionPage() {
-  const [nom, setNom] = useState("");
-  const [telephone, setTelephone] = useState("");
-  const [quartier, setQuartier] = useState("");
-  const [ville, setVille] = useState("");
-  const [metier, setMetier] = useState("");
-  const [description, setDescription] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [photo, setPhoto] = useState(null);
+  try {
+    let userId = null;
 
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (loading) return;
-    setLoading(true);
-
-    try {
-      // =========================
-      // 1. AUTH SUPABASE
-      // =========================
-      const { data, error } = await supabase.auth.signUp({
+    // =========================
+    // 1. LOGIN FIRST
+    // =========================
+    const { data: loginData } =
+      await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) {
-        alert(error.message);
-        console.log(error);
-        setLoading(false);
-        return;
-      }
-
-      const userId = data?.user?.id;
-
-      // =========================
-      // 2. UPLOAD PHOTO
-      // =========================
-      let photoUrl = "";
-
-      if (photo) {
-        const fileExt = photo.name.split(".").pop();
-        const fileName = `${Date.now()}.${fileExt}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from("artisans")
-          .upload(fileName, photo);
-
-        if (uploadError) {
-          alert(uploadError.message);
-          console.log(uploadError);
-          setLoading(false);
-          return;
-        }
-
-        const { data: publicUrlData } = supabase.storage
-          .from("artisans")
-          .getPublicUrl(fileName);
-
-        photoUrl = publicUrlData.publicUrl;
-      }
-
-      // =========================
-      // 3. INSERT TABLE ARTISANS
-      // =========================
-      const { error: artisanError } = await supabase
-        .from("artisans")
-        .insert([
-          {
-            user_id: userId,
-            nom,
-            telephone,
-            quartier,
-            ville,
-            metier,
-            description,
-            email,
-            photo: photoUrl,
-          },
-        ]);
-
-      if (artisanError) {
-        alert(artisanError.message);
-        console.log(artisanError);
-        setLoading(false);
-        return;
-      }
-
-      alert("Inscription réussie ✅");
-
-      // RESET FORM
-      setNom("");
-      setTelephone("");
-      setQuartier("");
-      setVille("");
-      setMetier("");
-      setDescription("");
-      setEmail("");
-      setPassword("");
-      setPhoto(null);
-
-    } catch (err) {
-      console.log(err);
-      alert("Erreur d'inscription");
+    if (loginData?.user) {
+      userId = loginData.user.id;
     }
 
-    setLoading(false);
-  };
+    // =========================
+    // 2. SIGNUP IF LOGIN FAILS
+    // =========================
+    if (!userId) {
+      const { data: signUpData, error: signUpError } =
+        await supabase.auth.signUp({
+          email,
+          password,
+        });
 
-  return (
-    <div style={pageStyle}>
-      <form onSubmit={handleSubmit} style={formStyle}>
-        <img src="/bg.jpg.png" alt="logo" style={logoStyle} />
+      if (signUpError) {
+        alert(signUpError.message);
+        setLoading(false);
+        return;
+      }
 
-        <h1 style={titleStyle}>Inscription Artisan</h1>
+      const user =
+        signUpData?.user ||
+        signUpData?.session?.user;
 
-        <input
-          type="text"
-          placeholder="Nom complet"
-          value={nom}
-          onChange={(e) => setNom(e.target.value)}
-          style={inputStyle}
-          required
-        />
+      if (!user) {
+        alert("Erreur création utilisateur");
+        setLoading(false);
+        return;
+      }
 
-        <input
-          type="text"
-          placeholder="Téléphone"
-          value={telephone}
-          onChange={(e) => setTelephone(e.target.value)}
-          style={inputStyle}
-          required
-        />
+      userId = user.id;
+    }
 
-        <input
-          type="text"
-          placeholder="Ville"
-          value={ville}
-          onChange={(e) => setVille(e.target.value)}
-          style={inputStyle}
-          required
-        />
+    console.log("USER ID FINAL:", userId);
 
-        <input
-          type="text"
-          placeholder="Quartier"
-          value={quartier}
-          onChange={(e) => setQuartier(e.target.value)}
-          style={inputStyle}
-          required
-        />
+    if (!userId) {
+      alert("UserId null → problème auth Supabase");
+      setLoading(false);
+      return;
+    }
 
-        <select
-          value={metier}
-          onChange={(e) => setMetier(e.target.value)}
-          style={inputStyle}
-          required
-        >
-          <option value="">Choisir un métier</option>
-          <option value="electricien">Électricien</option>
-          <option value="plombier">Plombier</option>
-          <option value="mecanicien">Mécanicien</option>
-          <option value="macon">Maçon</option>
-          <option value="charpentier">Charpentier</option>
-        </select>
+    // petit délai (évite bug session)
+    await new Promise((res) => setTimeout(res, 300));
 
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          style={textareaStyle}
-        />
+    // =========================
+    // 3. UPLOAD PHOTO
+    // =========================
+    let photoUrl = "";
 
-        {/* PHOTO */}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setPhoto(e.target.files[0])}
-          style={{ color: "white" }}
-        />
+    if (photo) {
+      const fileExt = photo.name.split(".").pop();
+      const fileName = `${Date.now()}.${fileExt}`;
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={inputStyle}
-          required
-        />
+      const { error: uploadError } = await supabase
+        .storage
+        .from("artisans")
+        .upload(fileName, photo);
 
-        <input
-          type="password"
-          placeholder="Mot de passe"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={inputStyle}
-          required
-        />
+      if (uploadError) {
+        alert(uploadError.message);
+        setLoading(false);
+        return;
+      }
 
-        <button
-          type="submit"
-          style={buttonStyle}
-          disabled={loading}
-        >
-          {loading ? "Inscription..." : "S'inscrire"}
-        </button>
-      </form>
-    </div>
-  );
-}
+      const { data: publicUrlData } = supabase
+        .storage
+        .from("artisans")
+        .getPublicUrl(fileName);
 
-/* ===================== */
-/* STYLES */
-/* ===================== */
+      photoUrl = publicUrlData.publicUrl;
+    }
 
-const pageStyle = {
-  minHeight: "100vh",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  backgroundImage: "url('/bg.jpg.png')",
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  padding: 20,
-};
+    // =========================
+    // 4. INSERT ARTISAN
+    // =========================
+    const { error: artisanError } = await supabase
+      .from("artisans")
+      .insert([
+        {
+          user_id: userId,
+          nom,
+          telephone,
+          quartier,
+          ville,
+          metier,
+          description,
+          email,
+          photo: photoUrl,
+        },
+      ]);
 
-const formStyle = {
-  backgroundColor: "rgba(0,0,0,0.75)",
-  backdropFilter: "blur(6px)",
-  padding: 30,
-  borderRadius: 20,
-  width: "100%",
-  maxWidth: 450,
-  display: "flex",
-  flexDirection: "column",
-  gap: 15,
-  color: "white",
-  boxShadow: "0 0 20px rgba(0,0,0,0.3)",
-};
+    if (artisanError) {
+      alert(artisanError.message);
+      console.log(artisanError);
+      setLoading(false);
+      return;
+    }
 
-const logoStyle = {
-  width: 90,
-  alignSelf: "center",
-  marginBottom: 10,
-};
+    alert("Inscription réussie ✅");
 
-const titleStyle = {
-  textAlign: "center",
-  marginBottom: 10,
-};
+    // RESET FORM
+    setNom("");
+    setTelephone("");
+    setQuartier("");
+    setVille("");
+    setMetier("");
+    setDescription("");
+    setEmail("");
+    setPassword("");
+    setPhoto(null);
 
-const inputStyle = {
-  padding: 12,
-  borderRadius: 10,
-  border: "none",
-  outline: "none",
-};
+  } catch (err) {
+    console.log(err);
+    alert("Erreur d'inscription");
+  }
 
-const textareaStyle = {
-  padding: 12,
-  borderRadius: 10,
-  border: "none",
-  outline: "none",
-  minHeight: 100,
-};
-
-const buttonStyle = {
-  padding: 14,
-  border: "none",
-  borderRadius: 10,
-  backgroundColor: "#0ea5e9",
-  color: "white",
-  fontWeight: "bold",
-  cursor: "pointer",
-  fontSize: 16,
+  setLoading(false);
 };
