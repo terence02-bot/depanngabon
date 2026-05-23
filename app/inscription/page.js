@@ -46,10 +46,11 @@ export default function InscriptionPage() {
       let photoUrl = "";
 
       if (photo) {
-        const fileName = `${Date.now()}-${photo.name}`;
+        const fileExt = photo.name.split(".").pop();
+        const fileName = `${Date.now()}.${fileExt}`;
 
         const { error: uploadError } = await supabase.storage
-          .from("photos")
+          .from("artisans")
           .upload(fileName, photo);
 
         if (uploadError) {
@@ -59,9 +60,11 @@ export default function InscriptionPage() {
           return;
         }
 
-        photoUrl = supabase.storage
-          .from("photos")
-          .getPublicUrl(fileName).data.publicUrl;
+        const { data: publicUrlData } = supabase.storage
+          .from("artisans")
+          .getPublicUrl(fileName);
+
+        photoUrl = publicUrlData.publicUrl;
       }
 
       // =========================
