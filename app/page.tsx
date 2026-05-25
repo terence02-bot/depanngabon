@@ -19,7 +19,7 @@ export default function HomePage() {
 
         {/* 📌 DESCRIPTION DU SITE */}
         <div style={box}>
-          <h2>📌 À propos de la plateforme</h2>
+          <h2>📌 Description</h2>
 
           <p>
             Depann'Gabon est une plateforme qui permet de mettre en relation
@@ -42,33 +42,16 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* 👤 BIOGRAPHIE FONDATEUR */}
-        <div style={bioBox}>
-          <h2>👤 Fondateur</h2>
-
-          <p><strong>Nom :</strong> EBE OBAME Paul Terence</p>
-          <p><strong>Date de naissance :</strong> 03/05/2002</p>
-          <p><strong>Ville :</strong> Libreville, Gabon</p>
-          <p><strong>Email :</strong> ebepaul75@gmail.com</p>
-          <p><strong>Rôle :</strong> Créateur de Depann'Gabon</p>
-
-          <p>
-            Passionné de technologie et de services numériques,
-            j’ai créé Depann'Gabon pour moderniser la mise en relation
-            entre artisans et clients au Gabon.
-          </p>
-        </div>
-
         {/* TEXTE */}
         <p style={desc}>
           Trouvez rapidement des artisans fiables au Gabon
         </p>
 
+        {/* 🔧 MÉTIERS */}
         <h3 style={{ marginTop: 25 }}>
           🔧 Choisir un métier
         </h3>
 
-        {/* BOUTONS */}
         <div style={btnContainer}>
 
           <Link href="/electricien">
@@ -91,6 +74,23 @@ export default function HomePage() {
             <button style={btn}>🪚 Charpentier</button>
           </Link>
 
+        </div>
+
+        {/* 👤 A PROPOS / FONDATEUR */}
+        <div style={bioBox}>
+          <h2>👤 À propos du fondateur</h2>
+
+          <p><strong>Nom :</strong> EBE OBAME Paul Terence</p>
+          <p><strong>Date de naissance :</strong> 03/05/2002</p>
+          <p><strong>Ville :</strong> Libreville, Gabon</p>
+          <p><strong>Email :</strong> ebepaul75@gmail.com</p>
+          <p><strong>Rôle :</strong> Créateur de Depann'Gabon</p>
+
+          <p>
+            Passionné de technologie et de services numériques,
+            j’ai créé Depann'Gabon pour moderniser la mise en relation
+            entre artisans et clients au Gabon.
+          </p>
         </div>
 
       </div>
@@ -133,6 +133,7 @@ const bioBox: React.CSSProperties = {
   backgroundColor: "rgba(0,150,255,0.15)",
   padding: 20,
   borderRadius: 20,
+  marginTop: 30,
   marginBottom: 15,
   border: "1px solid rgba(255,255,255,0.2)"
 };
@@ -148,7 +149,8 @@ const btnContainer: React.CSSProperties = {
   gap: 12,
   flexWrap: "wrap",
   justifyContent: "center",
-  marginTop: 10
+  marginTop: 10,
+  marginBottom: 30
 };
 
 const btn: React.CSSProperties = {
